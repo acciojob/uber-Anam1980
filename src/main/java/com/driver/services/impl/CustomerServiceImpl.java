@@ -12,8 +12,7 @@ import com.driver.repository.CustomerRepository;
 import com.driver.repository.DriverRepository;
 import com.driver.repository.TripBookingRepository;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -59,7 +58,15 @@ public class CustomerServiceImpl implements CustomerService {
 			customerRepository2.save(customer);
 		}
 
-		Driver driver = driverRepository2.getlowestIdDriver();
+		Driver driver = null;
+		List<Driver> driverOptional= driverRepository2.findAll();
+		Collections.sort(driverOptional,(a,b)->{return -1;});
+		for (Driver d:driverOptional) {
+			if(d.getCab().getAvailable()==true ){
+				driver = d;
+				break;
+			}
+		}
 		if(driver==null){
 			throw new Exception("No cab available!");
 		}
