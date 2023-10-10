@@ -48,33 +48,36 @@ public class CustomerServiceImpl implements CustomerService {
 		//Book the driver with lowest driverId who is free (cab available variable is Boolean.TRUE). If no driver is available, throw "No cab available!" exception
 		//Avoid using SQL query
 		TripBooking tripBooking = new TripBooking(fromLocation, toLocation, distanceInKm);
-		Optional<Customer> customerOptional= customerRepository2.findById(customerId);
-
-		if(customerOptional.isPresent()){
-			Customer customer = customerOptional.get();
-			ArrayList<TripBooking>bookingArrayList = (ArrayList<TripBooking>) customer.getTripBookingList();
-			bookingArrayList.add(tripBooking);
-			customer.setTripBookingList(bookingArrayList);
-			customerRepository2.save(customer);
-		}
 
 		Driver driver = null;
 		List<Driver> driverOptional= driverRepository2.findAll();
-		Collections.sort(driverOptional,(a,b)->{return -1;});
+
 		for (Driver d:driverOptional) {
-			if(d.getCab().getAvailable()==true ){
-				driver = d;
-				break;
+			if (d.getCab().getAvailable() == Boolean.TRUE) {
+				if (driver == null || d.getDriverId() < driver.getDriverId()) {
+					driver = d;
+				}
 			}
 		}
 		if(driver==null){
 			throw new Exception("No cab available!");
 		}
-		ArrayList<TripBooking>bookingArrayList = (ArrayList<TripBooking>) driver.getTripBookingList();
-		bookingArrayList.add(tripBooking);
-		driver.setTripBookingList(bookingArrayList);
+		Customer customer = customerRepository2.findById(customerId).get();
+		tripBooking.setCustomer(customer);
+		tripBooking.setDriver(driver);
+		driver.getCab().setAvailable(Boolean.FALSE);
+		tripBooking.setStatus(TripStatus.CONFIRMED);
+		tripBooking.setDistanceInKm(distanceInKm);
+		tripBooking.setFromLocation(fromLocation);
+		tripBooking.setToLocation(toLocation);
+
+		customer.getTripBookingList().add(tripBooking);
+		customerRepository2.save(customer);//saving in parent
+
+		driver.getTripBookingList().add(tripBooking);
 		driverRepository2.save(driver);
 
+		//tripBookingRepository2.save(tripBooking);//qki ye child hai to jarurat nhi hai
 		return  tripBooking;
 	}
 
@@ -85,7 +88,8 @@ public class CustomerServiceImpl implements CustomerService {
 		if(tripBooking.isPresent()){
 			TripBooking tripBooking1 = tripBooking.get();
 			tripBooking1.setStatus(TripStatus.CANCELED);
-			tripBookingRepository2.delete(tripBooking1);
+
+			tripBookingRepository2.deleteById(tripId);
 		}
 
 	}
