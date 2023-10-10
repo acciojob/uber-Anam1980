@@ -4,12 +4,29 @@ import javax.persistence.*;
 import java.sql.Driver;
 
 @Entity
+
 public class Cab {
+    public Cab() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int Id;
     int perKmRate;
     boolean available;
+
+    public Cab(int id, int perKmRate, boolean available) {
+        Id = id;
+        this.perKmRate = perKmRate;
+        this.available = available;
+    }
+
+    public Cab(int id, int perKmRate, boolean available, Driver driver) {
+        Id = id;
+        this.perKmRate = perKmRate;
+        this.available = available;
+        this.driver = driver;
+    }
 
     public Cab(int perKmRate, boolean available) {
         this.perKmRate = perKmRate;
@@ -32,7 +49,7 @@ public class Cab {
         this.perKmRate = perKmRate;
     }
 
-    public boolean isAvailable() {
+    public boolean getAvailable() {
         return available;
     }
 

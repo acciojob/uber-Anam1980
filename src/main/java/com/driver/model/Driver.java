@@ -1,6 +1,6 @@
 package com.driver.model;
 
-import com.driver.model.Cab;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,6 +12,21 @@ public class Driver {
     int driverId;
     String mobile;
     String password;
+
+    public Driver() {
+    }
+
+    public Driver(int driverId) {
+        this.driverId = driverId;
+    }
+
+    public Driver(int driverId, String mobile, String password, Cab cab, List<TripBooking> tripBookingList) {
+        this.driverId = driverId;
+        this.mobile = mobile;
+        this.password = password;
+        this.cab = cab;
+        this.tripBookingList = tripBookingList;
+    }
 
     public Driver(String mobile, String password) {
         this.mobile = mobile;
