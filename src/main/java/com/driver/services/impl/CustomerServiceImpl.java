@@ -81,7 +81,12 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public void cancelTrip(Integer tripId){
 		//Cancel the trip having given trip Id and update TripBooking attributes accordingly
-		tripBookingRepository2.deleteById(tripId);
+		Optional<TripBooking> tripBooking = tripBookingRepository2.findById(tripId);
+		if(tripBooking.isPresent()){
+			TripBooking tripBooking1 = tripBooking.get();
+			tripBooking1.setStatus(TripStatus.CANCELED);
+			tripBookingRepository2.delete(tripBooking1);
+		}
 
 	}
 
