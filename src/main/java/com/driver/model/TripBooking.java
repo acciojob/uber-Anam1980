@@ -11,12 +11,30 @@ public class TripBooking {
 
     String fromLocation;
 
+    public TripBooking() {
+    }
+
     String toLocation;
+
+
+    public TripBooking(int tripBookingId, String fromLocation, String toLocation, int distanceInKm, int bill) {
+        this.tripBookingId = tripBookingId;
+        this.fromLocation = fromLocation;
+        this.toLocation = toLocation;
+        this.distanceInKm = distanceInKm;
+        this.bill = bill;
+    }
 
     public TripBooking(String fromLocation, String toLocation, int distanceInKm) {
         this.fromLocation = fromLocation;
         this.toLocation = toLocation;
         this.distanceInKm = distanceInKm;
+    }
+
+    public TripBooking(int tripBookingId, String fromLocation, String toLocation) {
+        this.tripBookingId = tripBookingId;
+        this.fromLocation = fromLocation;
+        this.toLocation = toLocation;
     }
 
     public int getTripBookingId() {
