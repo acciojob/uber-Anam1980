@@ -88,8 +88,9 @@ public class CustomerServiceImpl implements CustomerService {
 		if(tripBooking.isPresent()){
 			TripBooking tripBooking1 = tripBooking.get();
 			tripBooking1.setStatus(TripStatus.CANCELED);
-
-			tripBookingRepository2.deleteById(tripId);
+			tripBooking1.setBill(0);
+			tripBooking1.getDriver().getCab().setAvailable(Boolean.TRUE);
+			tripBookingRepository2.save(tripBooking1);
 		}
 
 	}
@@ -101,6 +102,9 @@ public class CustomerServiceImpl implements CustomerService {
 		if(tripBooking.isPresent()){
 			TripBooking tripBooking1 = tripBooking.get();
 			tripBooking1.setStatus(TripStatus.COMPLETED);
+			tripBooking1.getDriver().getCab().setAvailable(Boolean.TRUE);
+			int bill = tripBooking1.getDriver().getCab().getPerKmRate() * tripBooking1.getDistanceInKm();
+			tripBooking1.setBill(bill);
 			tripBookingRepository2.save(tripBooking1);
 		}
 	}
